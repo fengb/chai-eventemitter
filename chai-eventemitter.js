@@ -27,7 +27,7 @@ module.exports = function(chai, utils){
   }
 
   chai.Assertion.addMethod('cause', function(eventable){
-    this._eventable = eventable
+    utils.flag(this, 'eventable', eventable)
   })
 
   chai.Assertion.addMethod('emit', function(eventName){
@@ -36,7 +36,7 @@ module.exports = function(chai, utils){
     }
 
     var trigger = this._obj
-    var eventable = this._eventable
+    var eventable = utils.flag(this, 'eventable')
 
     var calledArgs
     eventable.once(eventName, function(){
