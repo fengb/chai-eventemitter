@@ -28,21 +28,31 @@ module.exports = function(chai, utils){
 
     trigger()
 
+    var expectedEmit = [eventName].concat(expectedArgs || [])
+    var pMsg
+    if(calledArgs){
+      var actualEmit = [eventName].concat(calledArgs)
+      pMsg = formatInspect('expected #{this} to cause %s to emit %s but got %s',
+                           eventable, expectedEmit, actualEmit)
+    } else {
+      pMsg = formatInspect('expected #{this} to cause %s to emit %s',
+                           eventable, expectedEmit)
+    }
+
+    var nMsg = formatInspect('expected #{this} to not cause %s to emit %s',
+                             eventable, expectedEmit)
+
     if(expectedArgs){
       this.assert(
         utils.eql(calledArgs, expectedArgs)
-      , formatInspect('expected #{this} to cause %s to emit %s but got %s',
-                      eventable, [eventName].concat(expectedArgs), [eventName].concat(calledArgs))
-      , formatInspect('expected #{this} to not cause %s to emit %s',
-                      eventable, [eventName].concat(expectedArgs))
+      , pMsg
+      , nMsg
       )
     } else {
       this.assert(
         calledArgs != undefined
-      , formatInspect('expected #{this} to cause %s to emit %s',
-                      eventable, [eventName])
-      , formatInspect('expected #{this} to not cause %s to emit %s',
-                      eventable, [eventName])
+      , pMsg
+      , nMsg
       )
     }
   })
