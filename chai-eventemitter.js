@@ -1,12 +1,29 @@
 var format = require('util').format
 
 module.exports = function(chai, utils){
-  function formatInspect(string){
-    var formatArgs = [string]
-    for(var i = 1; i < arguments.length; i++){
-      formatArgs.push(utils.inspect(arguments[i]))
+  var toArray = Function.call.bind(Array.prototype.slice)
+
+  function messaging(eventable, eventName, expectedArgs, calledArgs){
+    var expectedEmit = utils.inspect([eventName].concat(expectedArgs || []))
+
+    if(calledArgs){
+      var butGot = ' but got ' + utils.inspect([eventName].concat(calledArgs))
     }
-    return format.apply(null, formatArgs)
+
+    return {
+      positive: format('expected #{this} to cause %s to emit %s' + butGot,
+                        eventable, expectedEmit),
+      negative: format('expected #{this} to not cause %s to emit %s',
+                        eventable, expectedEmit),
+    }
+  }
+
+  function calledCheck(calledArgs, expectedArgs){
+    if(expectedArgs){
+      return utils.eql(calledArgs, expectedArgs)
+    } else {
+      return calledArgs != undefined
+    }
   }
 
   chai.Assertion.addMethod('cause', function(eventable){
@@ -15,7 +32,7 @@ module.exports = function(chai, utils){
 
   chai.Assertion.addMethod('emit', function(eventName){
     if(arguments.length > 1){
-      var expectedArgs = Array.prototype.slice.call(arguments, 1)
+      var expectedArgs = toArray(arguments, 1)
     }
 
     var trigger = this._obj
@@ -23,37 +40,16 @@ module.exports = function(chai, utils){
 
     var calledArgs
     eventable.once(eventName, function(){
-      calledArgs = Array.prototype.slice.call(arguments)
+      calledArgs = toArray(arguments)
     })
 
     trigger()
 
-    var expectedEmit = [eventName].concat(expectedArgs || [])
-    var pMsg
-    if(calledArgs){
-      var actualEmit = [eventName].concat(calledArgs)
-      pMsg = formatInspect('expected #{this} to cause %s to emit %s but got %s',
-                           eventable, expectedEmit, actualEmit)
-    } else {
-      pMsg = formatInspect('expected #{this} to cause %s to emit %s',
-                           eventable, expectedEmit)
-    }
-
-    var nMsg = formatInspect('expected #{this} to not cause %s to emit %s',
-                             eventable, expectedEmit)
-
-    if(expectedArgs){
-      this.assert(
-        utils.eql(calledArgs, expectedArgs)
-      , pMsg
-      , nMsg
-      )
-    } else {
-      this.assert(
-        calledArgs != undefined
-      , pMsg
-      , nMsg
-      )
-    }
+    var message = messaging(eventable, eventName, expectedArgs, calledArgs)
+    this.assert(
+      calledCheck(calledArgs, expectedArgs)
+    , message.positive
+    , message.positive
+    )
   })
 }
