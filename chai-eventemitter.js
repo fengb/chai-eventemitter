@@ -1,5 +1,3 @@
-var format = require('util').format
-
 module.exports = function(chai, utils){
   var toArray = Function.call.bind(Array.prototype.slice)
 
@@ -11,10 +9,12 @@ module.exports = function(chai, utils){
     }
 
     return {
-      positive: format('expected #{this} to cause %s to emit %s' + butGot,
-                        eventable, expectedEmit),
-      negative: format('expected #{this} to not cause %s to emit %s',
-                        eventable, expectedEmit),
+      positive: ('expected #{this} to cause #{obj} to emit #{expected}' + butGot)
+                    .replace(/#{obj}/, eventable)
+                    .replace(/#{expected}/, expectedEmit),
+      negative: 'expected #{this} to not cause #{obj} to emit #{expected}'
+                    .replace(/#{obj}/, eventable)
+                    .replace(/#{expected}/, expectedEmit),
     }
   }
 
