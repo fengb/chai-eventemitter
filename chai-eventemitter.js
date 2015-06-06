@@ -26,7 +26,7 @@ module.exports = function(chai, utils){
     }
   }
 
-  chai.Assertion.addMethod('cause', function(eventable){
+  chai.Assertion.addChainableMethod('cause', function(eventable){
     utils.flag(this, 'eventable', eventable)
   })
 
