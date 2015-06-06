@@ -1,4 +1,18 @@
-module.exports = function(chai, utils){
+// Ugh - module dance
+!function(context, chaiGenerator){
+  if(typeof require === 'function' && typeof exports === 'object' && typeof module === 'object'){
+    // node
+    module.exports = chaiGenerator
+  } else if(typeof define === 'function' && define.amd){
+    // AMD
+    define(function(){
+      return chaiGenerator
+    })
+  } else {
+    // assume browser
+    chai.use(chaiGenerator)
+  }
+}(this, function(chai, utils){
   var toArray = Function.call.bind(Array.prototype.slice)
 
   function messaging(eventable, eventName, expectedArgs, calledArgs){
@@ -52,4 +66,4 @@ module.exports = function(chai, utils){
     , message.positive
     )
   })
-}
+})

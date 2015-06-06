@@ -1,8 +1,10 @@
-var chai = require('chai')
-var chaiEventEmitter = require('..')
-chai.use(chaiEventEmitter)
+if(typeof chai === 'undefined'){
+  var chai = require('chai')
+  var chaiEventEmitter = require('..')
+  chai.use(chaiEventEmitter)
 
-var EventEmitter = require('eventemitter').EventEmitter
+  var EventEmitter = require('events').EventEmitter
+}
 
 describe('expect()', function(){
   it('.to.cause(obj).to.emit("event")', function(){
