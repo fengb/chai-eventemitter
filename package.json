@@ -27,6 +27,7 @@
     "chai": ">= 2.0.0, < 4.0.0"
   },
   "devDependencies": {
+    "eventemitter": "^0.3.3",
     "mocha": "^2.2.5"
   }
 }

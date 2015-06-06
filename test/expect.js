@@ -2,7 +2,7 @@ var chai = require('chai')
 var chaiEventEmitter = require('..')
 chai.use(chaiEventEmitter)
 
-var EventEmitter = require('events').EventEmitter
+var EventEmitter = require('eventemitter').EventEmitter
 
 describe('expect()', function(){
   it('.to.cause(obj).to.emit("event")', function(){
