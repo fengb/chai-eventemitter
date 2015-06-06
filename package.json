@@ -1,0 +1,26 @@
+{
+  "name": "chai-eventemitter",
+  "version": "1.0.0",
+  "description": "Test EventEmitter with Chai",
+  "main": "index.js",
+  "author": "Benjamin Feng <contact@fengb.info>",
+  "license": "MIT",
+  "homepage": "https://github.com/fengb/chai-eventemitter",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fengb/chai-eventemitter.git"
+  },
+  "keywords": [
+    "chai",
+    "eventemitter",
+    "test",
+    "assert",
+    "assertion"
+  ],
+  "bugs": {
+    "url": "https://github.com/fengb/chai-eventemitter/issues"
+  }
+}
