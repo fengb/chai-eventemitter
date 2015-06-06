@@ -63,7 +63,7 @@
     this.assert(
       calledCheck(calledArgs, expectedArgs)
     , message.positive
-    , message.positive
+    , message.negative
     )
   })
 })
