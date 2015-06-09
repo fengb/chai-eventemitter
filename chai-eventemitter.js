@@ -41,6 +41,10 @@
   }
 
   chai.Assertion.addChainableMethod('cause', function(eventable){
+    var trigger = this._obj
+
+    new chai.Assertion(trigger).to.be.instanceOf(Function)
+    new chai.Assertion(eventable).to.respondTo('once')
     utils.flag(this, 'eventable', eventable)
   })
 
