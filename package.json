@@ -2,7 +2,7 @@
   "name": "chai-eventemitter",
   "version": "1.0.0",
   "description": "Test EventEmitter with Chai",
-  "main": "index.js",
+  "main": "chai-eventemitter",
   "author": "Benjamin Feng <contact@fengb.info>",
   "license": "MIT",
   "homepage": "https://github.com/fengb/chai-eventemitter",
