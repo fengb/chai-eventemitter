@@ -38,7 +38,7 @@ chai.use(require('chai-eventemitter'))
 
 ```html
 <script src="chai.js"></script>
-<script src="chai-emitter.js"></script>
+<script src="chai-eventemitter.js"></script>
 ```
 
 # License
