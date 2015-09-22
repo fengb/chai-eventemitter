@@ -15,7 +15,7 @@
 }(this, function(chai, utils){
   var toArray = Function.call.bind(Array.prototype.slice)
 
-  function messaging(eventable, eventName, expectedArgs, calledArgs){
+  function messaging(ee, eventName, expectedArgs, calledArgs){
     var expectedEmit = utils.inspect([eventName].concat(expectedArgs || []))
 
     var butGot = ''
@@ -25,10 +25,10 @@
 
     return {
       positive: ('expected #{this} to emit from #{obj} event #{expected}' + butGot)
-                    .replace(/#{obj}/, eventable)
+                    .replace(/#{obj}/, ee)
                     .replace(/#{expected}/, expectedEmit),
       negative: 'expected #{this} not to emit from #{obj} event #{expected}'
-                    .replace(/#{obj}/, eventable)
+                    .replace(/#{obj}/, ee)
                     .replace(/#{expected}/, expectedEmit),
     }
   }
@@ -41,7 +41,7 @@
     }
   }
 
-  chai.Assertion.addMethod('emitFrom', function(eventable, eventName){
+  chai.Assertion.addMethod('emitFrom', function(ee, eventName){
     if(arguments.length > 2){
       var expectedArgs = toArray(arguments, 2)
     }
@@ -49,16 +49,16 @@
     var trigger = this._obj
 
     new chai.Assertion(trigger).to.be.instanceOf(Function)
-    new chai.Assertion(eventable).to.respondTo('once')
+    new chai.Assertion(ee).to.respondTo('once')
 
     var calledArgs
-    eventable.once(eventName, function(){
+    ee.once(eventName, function(){
       calledArgs = toArray(arguments)
     })
 
     trigger()
 
-    var message = messaging(eventable, eventName, expectedArgs, calledArgs)
+    var message = messaging(ee, eventName, expectedArgs, calledArgs)
     this.assert(
       calledCheck(calledArgs, expectedArgs)
     , message.positive
@@ -75,13 +75,13 @@
   }
 
   // Deprecated
-  chai.Assertion.addChainableMethod('cause', function(eventable){
+  chai.Assertion.addChainableMethod('cause', function(ee){
     warnDeprecation('.cause(ee).to.emit(event)', 'emitFrom(ee, event)')
     var trigger = this._obj
 
     new chai.Assertion(trigger).to.be.instanceOf(Function)
-    new chai.Assertion(eventable).to.respondTo('once')
-    utils.flag(this, 'eventable', eventable)
+    new chai.Assertion(ee).to.respondTo('once')
+    utils.flag(this, 'ee', ee)
   })
 
   // Deprecated
@@ -92,16 +92,16 @@
     }
 
     var trigger = this._obj
-    var eventable = utils.flag(this, 'eventable')
+    var ee = utils.flag(this, 'ee')
 
     var calledArgs
-    eventable.once(eventName, function(){
+    ee.once(eventName, function(){
       calledArgs = toArray(arguments)
     })
 
     trigger()
 
-    var message = messaging(eventable, eventName, expectedArgs, calledArgs)
+    var message = messaging(ee, eventName, expectedArgs, calledArgs)
     this.assert(
       calledCheck(calledArgs, expectedArgs)
     , message.positive
