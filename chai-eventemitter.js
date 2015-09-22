@@ -23,10 +23,10 @@
     }
 
     return {
-      positive: ('expected #{this} to cause #{obj} to emit #{expected}' + butGot)
+      positive: ('expected #{this} to emit from #{obj} event #{expected}' + butGot)
                     .replace(/#{obj}/, eventable)
                     .replace(/#{expected}/, expectedEmit),
-      negative: 'expected #{this} to not cause #{obj} to emit #{expected}'
+      negative: 'expected #{this} not to emit from #{obj} event #{expected}'
                     .replace(/#{obj}/, eventable)
                     .replace(/#{expected}/, expectedEmit),
     }
@@ -40,7 +40,42 @@
     }
   }
 
+  chai.Assertion.addMethod('emitFrom', function(eventable, eventName){
+    if(arguments.length > 2){
+      var expectedArgs = toArray(arguments, 2)
+    }
+
+    var trigger = this._obj
+
+    new chai.Assertion(trigger).to.be.instanceOf(Function)
+    new chai.Assertion(eventable).to.respondTo('once')
+
+    var calledArgs
+    eventable.once(eventName, function(){
+      calledArgs = toArray(arguments)
+    })
+
+    trigger()
+
+    var message = messaging(eventable, eventName, expectedArgs, calledArgs)
+    this.assert(
+      calledCheck(calledArgs, expectedArgs)
+    , message.positive
+    , message.negative
+    )
+  })
+
+  function warnDeprecation(value, alternative){
+    if(warnDeprecation[value]){
+      return
+    }
+    warnDeprecation[value] = alternative
+    console.log('"' + value + '" is deprecated. Please switch to "' + alternative +'" instead.')
+  }
+
+  // Deprecated
   chai.Assertion.addChainableMethod('cause', function(eventable){
+    warnDeprecation('.cause(ee).to.emit(event)', 'emitFrom(ee, event)')
     var trigger = this._obj
 
     new chai.Assertion(trigger).to.be.instanceOf(Function)
@@ -48,7 +83,9 @@
     utils.flag(this, 'eventable', eventable)
   })
 
+  // Deprecated
   chai.Assertion.addMethod('emit', function(eventName){
+    warnDeprecation('.cause(ee).to.emit(event)', 'emitFrom(ee, event)')
     if(arguments.length > 1){
       var expectedArgs = toArray(arguments, 1)
     }

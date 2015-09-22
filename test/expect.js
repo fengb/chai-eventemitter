@@ -6,48 +6,40 @@ if(typeof chai === 'undefined'){
   var EventEmitter = require('events').EventEmitter
 }
 
-var noop = function(){}
+function noop(){}
 
 describe('expect()', function(){
-  it('.to.cause(ee).to.emit("event")', function(){
+  it('.to.emitFrom(ee, "event")', function(){
     var ee = new EventEmitter()
-    chai.expect(function(){
-      ee.emit('event')
-    }).to.cause(ee).to.emit('event')
+    chai.expect(function(){ ee.emit('event') }).to.emitFrom(ee, 'event')
   })
 
-  it('.to.cause(ee).to.emit("event") with arg', function(){
+  it('.to.emitFrom(ee, "event") with arg', function(){
     var ee = new EventEmitter()
-    chai.expect(function(){
-      ee.emit('event', 'arg')
-    }).to.cause(ee).to.emit('event')
+    chai.expect(function(){ ee.emit('event', 'arg') }).to.emitFrom(ee, 'event')
   })
 
-  it('.to.cause(ee).to.emit("event", "arg")', function(){
+  it('.to.emitFrom(ee, "event", "arg")', function(){
     var ee = new EventEmitter()
-    chai.expect(function(){
-      ee.emit('event', 'arg')
-    }).to.cause(ee).to.emit('event', 'arg')
+    chai.expect(function(){ ee.emit('event', 'arg') }).to.emitFrom(ee, 'event', 'arg')
   })
 
-  it('.not.to.cause(ee).to.emit("event", "arg")', function(){
+  it('.not.to.emitFrom(ee, "event", "arg")', function(){
     var ee = new EventEmitter()
-    chai.expect(function(){
-      ee.emit('event')
-    }).not.to.cause(ee).to.emit('event', 'arg')
+    chai.expect(function(){ ee.emit('event') }).not.to.emitFrom(ee, 'event', 'arg')
   })
 
   describe('failures', function(){
     it('fails when expect(nonfunction)', function(){
       var ee = new EventEmitter()
       chai.expect(function(){
-        chai.expect(1).to.cause(ee).to.emit('event')
+        chai.expect(1).to.emitFrom(ee, 'event')
       }).to.throw(chai.assertionerror, /to be an instance of Function/)
     })
 
-    it('fails when .to.cause(nonemitter)', function(){
+    it('fails when .to.emitFrom(nonemitter)', function(){
       chai.expect(function(){
-        chai.expect(noop).to.cause(1).to.emit('event')
+        chai.expect(noop).to.emitFrom(1, 'event')
       }).to.throw(chai.assertionerror, /respond to.*once/)
     })
   })
