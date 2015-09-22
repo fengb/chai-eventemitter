@@ -7,22 +7,22 @@ EventEmitters can be testing using spies, but they are rather heavyweight for
 most usecases:
 
 ```javascript
-var spy = sinon.spy()                     //- boilerplate
+var spy = sinon.spy()
 
-emitter.on('test', spy)                   //- boilerplate
-emitter.emit('test')                      //+ useful
-expect(spy).to.have.been.called()         //+ verbose
+ee.on('test', spy)
+ee.emit('test')
+expect(spy).to.have.been.called()
 
-spy.reset()                               //- boilerplate
-emitter.emit('test', args)                //+ useful
-expect(spy).to.have.been.calledWith(args) //+ so verbose
+spy.reset()
+ee.emit('test', args)
+expect(spy).to.have.been.calledWith(args)
 ```
 
 `chai-eventemitter` replaces this with something much more digestable:
 
 ```javascript
-expect(function(){ emitter.emit('test') }).to.cause(emitter).to.emit('test')
-expect(function(){ emitter.emit('test', arg) }).to.cause(emitter).to.emit('test', arg)
+expect(function(){ ee.emit('test') }).to.emitFrom(ee, 'test')
+expect(function(){ ee.emit('test', arg) }).to.emitFrom(ee, 'test', arg)
 ```
 
 ## Setup
