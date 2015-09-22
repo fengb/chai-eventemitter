@@ -18,8 +18,9 @@
   function messaging(eventable, eventName, expectedArgs, calledArgs){
     var expectedEmit = utils.inspect([eventName].concat(expectedArgs || []))
 
+    var butGot = ''
     if(calledArgs){
-      var butGot = ' but got ' + utils.inspect([eventName].concat(calledArgs))
+      butGot = ' but got ' + utils.inspect([eventName].concat(calledArgs))
     }
 
     return {
